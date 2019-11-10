@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .game {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .canvas {
+            border: 2px solid #158055;
+            margin: 20px;
+        }
+
+        ul {
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="game">
+        <div class="stats">
+            <div class="health">Health: <span id="health-lbl">100</span>%</div>
+            <div class="health">Score: <span id="score-lbl">0</span></div>
+        </div>
+        <canvas class="canvas" id="canvas" width="200" height="500"></canvas>
+        <div>
+            <ul>
+                <li>Arrow left -> Move left</li>
+                <li>Arrow right -> Move right</li>
+                <li>Arrow up -> Shoot</li>
+                <li>Space bar -> Speed enemies</li>
+                <li>Enter -> Pause/Resume</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="cars.js"></script>
+</body>
+</html>
