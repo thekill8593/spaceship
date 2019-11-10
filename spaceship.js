@@ -217,6 +217,12 @@ class Figure {
         this.game = game;
         this.color = color;
     }
+
+    draw() {
+        const context = this.game.context;
+        context.fillStyle = this.color;
+        context.fillRect(this.x, this.y, this.width, this.height);
+    }
 }
 
 class Ship extends Figure{
@@ -238,13 +244,6 @@ class Ship extends Figure{
         }
         this.game.drawGame();
     }
-
-    draw() {
-        const context = this.game.context;
-        context.fillStyle = this.color;
-        context.fillRect(this.x, this.y, this.width, this.height);
-    }
-
 }
 
 class Enemy extends Figure{
@@ -259,24 +258,12 @@ class Enemy extends Figure{
     move (speed) {
         this.y += speed;
     }
-
-    draw() {
-        const context = this.game.context;
-        context.fillStyle = this.color;
-        context.fillRect(this.x, this.y, this.width, this.height);
-    }
 }
 
 class Bullet extends Figure{
 
     constructor (x, y, game) {
         super(x, y,4,4, game, 'rgb(198,200,0)');
-    }
-
-    draw() {
-        const context = this.game.context;
-        context.fillStyle = this.color;
-        context.fillRect(this.x, this.y, this.width, this.height);
     }
 
     move() {
