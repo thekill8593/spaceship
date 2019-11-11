@@ -23,6 +23,9 @@ class Game {
         this.bullet = null;
         this.playerShoot = false;
 
+        //particle system
+        this.particleSystem = new ParticleExplosion(this);
+
         this.animation = requestAnimationFrame(() => this.startGame());
 
         this.addControllers();
@@ -113,10 +116,14 @@ class Game {
                 (((bullet.x + bullet.width) < (enemy.x + enemy.width) && (bullet.x + bullet.width) > enemy.x)
                     && (bullet.y < (enemy.y + enemy.height) && bullet.y >= enemy.y))
             )  {
-                enemies.splice(i, 1);
                 this.playerShoot = false;
                 this.bullet = null;
-                this.score += 1;
+                if (!enemy.isIndestructible) {
+                    this.particleSystem.createParticles(bullet.x, bullet.y);
+                    enemies.splice(i, 1);                    
+                    this.score += 1;
+                }
+                
             }
         }
         this.enemies = enemies;
@@ -180,6 +187,7 @@ class Game {
             this.bullet = null;
             this.playerShoot = false;
             this.ENEMIES_DEFAULT_SPEED = 3;
+            this.enemiesSpeed = this.ENEMIES_DEFAULT_SPEED;
             this.score = 0;
         }
     }
@@ -194,6 +202,7 @@ class Game {
         if (this.playerShoot) {
             this.bullet.draw();
         }
+        this.particleSystem.draw();
     }
 
     clearScreen() {
@@ -252,7 +261,11 @@ class Enemy extends Figure{
         const x = randomX - (randomX % 40);
         let randomY = (Math.random() * 200) * -1;
         const y = randomY - (randomY % 1);
-        super(x, y,40 , 20, game, 'rgb(100,0,220)');
+        const indestructible = Math.random() >= 0.5;              
+        const color = indestructible ? 'rgb(200,20,0)' : 'rgb(100,0,220)'; 
+
+        super(x, y,40 , 20, game, color);
+        this.isIndestructible = indestructible;
     }
 
     move (speed) {
@@ -269,6 +282,58 @@ class Bullet extends Figure{
     move() {
         this.y-=2;
     }
+}
+
+class Particle {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.dx = Math.random()*10-5;
+        this.dy = Math.random()*10-5;
+        this.radius = 1;
+    }
+
+    move() {
+        this.x+=this.dx;
+        this.y+=this.dy;
+    }
+}
+
+class ParticleExplosion{
+    constructor(game) {
+        this.game = game;
+        this.numParticles = 15;
+        this.particles = [];
+        this.color = 'rgb(100,0,220)';
+        this.life = 0;
+    }
+
+
+    createParticles (x, y) {
+        this.particles = [];
+        this.life = 0;
+        for (let i = 0; i < this.numParticles; i++) {
+            this.particles.push(new Particle(x, y));
+        }
+    }
+
+    draw() {
+        if (this.life == 10) {
+            this.particles = [];
+        }
+
+        const context = this.game.context;
+        context.fillStyle = this.color;
+
+        for (let i = 0; i < this.particles.length; i++) {
+            this.particles[i].move();
+            context.beginPath();
+            context.arc(this.particles[i].x, this.particles[i].y, this.particles[i].radius, 0 ,  Math.PI * 2, false)
+            context.fill();
+        }
+        this.life++;
+    }
+
 }
 
 
